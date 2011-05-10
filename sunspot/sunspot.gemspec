@@ -24,7 +24,7 @@ Gem::Specification.new do |s|
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
-  s.executables   = ['sunspot-solr', 'sunspot-installer']
+  s.executables   = ['sunspot-installer']
 
   s.add_dependency 'rsolr', '0.12.1'
   s.add_dependency 'escape', '0.0.4'
@@ -32,6 +32,7 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency 'rspec', '~> 1.1'
   s.add_development_dependency 'hanna'
+  s.add_development_dependency 'sunspot_solr', Sunspot::VERSION
 
   s.rdoc_options << '--webcvs=http://github.com/outoftime/sunspot/tree/master/%s' <<
                   '--title' << 'Sunspot - Solr-powered search for Ruby objects - API Documentation' <<
