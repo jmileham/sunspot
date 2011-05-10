@@ -1,8 +1,7 @@
 source :rubygems
 
-require File.expand_path('../lib/sunspot/version', __FILE__)
+require File.expand_path('../../sunspot/lib/sunspot/version', __FILE__)
 
-gem 'sunspot', Sunspot::VERSION, :path => File.expand_path('..', __FILE__)
 gem 'sunspot_solr', Sunspot::VERSION, :path => File.expand_path('../../sunspot_solr', __FILE__)
 
 group :test do

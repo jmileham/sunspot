@@ -1,13 +1,13 @@
 # -*- encoding: utf-8 -*-
-lib = File.expand_path('../lib/', __FILE__)
+lib = File.expand_path('../../sunspot/lib/', __FILE__)
 
 $:.unshift(lib) unless $:.include?(lib)
 
-require 'sunspot/rails/version'
+require 'sunspot/version'
 
 Gem::Specification.new do |s|
   s.name = 'sunspot_rails'
-  s.version = Sunspot::Rails::VERSION
+  s.version = Sunspot::VERSION
   s.summary = 'Rails integration for the Sunspot Solr search library'
   s.email = 'mat@patch.com'
   s.homepage = 'http://github.com/outoftime/sunspot_rails'
@@ -29,8 +29,9 @@ TEXT
     Dir.glob('spec/*.rb') +
     Dir.glob('spec/mock_app/{app,lib,db,vendor,config}/**/*') +
     Dir.glob('spec/mock_app/{tmp,log,solr}')
-  s.add_dependency 'sunspot', Sunspot::Rails::VERSION
+  s.add_dependency 'sunspot', Sunspot::VERSION
   s.add_dependency 'nokogiri'
   s.add_development_dependency 'rspec', '~> 1.2'
   s.add_development_dependency 'rspec-rails', '~> 1.2'
+  s.add_development_dependency 'sunspot_solr', Sunspot::VERSION
 end
