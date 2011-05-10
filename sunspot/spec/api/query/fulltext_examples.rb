@@ -67,7 +67,7 @@ shared_examples_for 'fulltext query' do
     end
 
     it 'puts default dismax parameters in subquery' do
-      subqueries(:q).last[:qf].split(' ').sort.should == %w(backwards_title_text body_textsv tags_textv title_text)
+      subqueries(:q).last[:qf].split(' ').sort.should == %w(backwards_title_text body_textsv tags_textv title_autocomplete_text title_text)
     end
 
     it 'puts field list in main query' do
@@ -79,14 +79,14 @@ shared_examples_for 'fulltext query' do
     search = search do
       keywords 'keyword search'
     end
-    connection.searches.last[:qf].split(' ').sort.should == %w(backwards_title_text body_textsv tags_textv title_text)
+    connection.searches.last[:qf].split(' ').sort.should == %w(backwards_title_text body_textsv tags_textv title_autocomplete_text title_text)
   end
 
   it 'searches both stored and unstored text fields' do
     search Post, Namespaced::Comment do
       keywords 'keyword search'
     end
-    connection.searches.last[:qf].split(' ').sort.should == %w(author_name_text backwards_title_text body_text body_textsv tags_textv title_text)
+    connection.searches.last[:qf].split(' ').sort.should == %w(author_name_text backwards_title_text body_text body_textsv tags_textv title_autocomplete_text title_text)
   end
 
   it 'searches only specified text fields when specified' do
@@ -102,7 +102,7 @@ shared_examples_for 'fulltext query' do
         exclude_fields :backwards_title, :body_mlt
       end
     end
-    connection.searches.last[:qf].split(' ').sort.should == %w(body_textsv tags_textv title_text)
+    connection.searches.last[:qf].split(' ').sort.should == %w(body_textsv tags_textv title_autocomplete_text title_text)
   end
 
   it 'assigns boost to fields when specified' do
@@ -174,7 +174,7 @@ shared_examples_for 'fulltext query' do
         boost_fields :title => 1.5
       end
     end
-    connection.searches.last[:qf].split(' ').sort.should == %w(backwards_title_text body_textsv tags_textv title_text^1.5)
+    connection.searches.last[:qf].split(' ').sort.should == %w(backwards_title_text body_textsv tags_textv title_autocomplete_text title_text^1.5)
   end
 
   it 'ignores boost fields that do not apply' do
@@ -183,7 +183,7 @@ shared_examples_for 'fulltext query' do
         boost_fields :bogus => 1.2, :title => 1.5
       end
     end
-    connection.searches.last[:qf].split(' ').sort.should == %w(backwards_title_text body_textsv tags_textv title_text^1.5)
+    connection.searches.last[:qf].split(' ').sort.should == %w(backwards_title_text body_textsv tags_textv title_autocomplete_text title_text^1.5)
   end
 
   it 'sets default boost with default fields' do
@@ -311,5 +311,26 @@ shared_examples_for 'fulltext query' do
         keywords 'fulltext', :fields => :bogus
       end
     end.should raise_error(Sunspot::UnrecognizedFieldError)
+  end
+
+  it "fulltext searches fields that are descendents of TextType" do
+    search Post do
+      keywords 'fulltext'
+    end
+    connection.searches.last[:qf].should =~ /title_autocomplete_text/
+  end
+
+  it "doesn't search non-default fields by default" do
+    search Post do
+      keywords 'fulltext'
+    end
+    connection.searches.last[:qf].should_not =~ /tags_autocomplete_text/
+  end
+
+  it "searches non-default fields on request" do
+    search Post do
+      keywords 'fulltext', :fields => :tags_autocomplete
+    end
+    connection.searches.last[:qf].should =~ /tags_autocomplete_text/
   end
 end
