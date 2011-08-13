@@ -1,13 +1,13 @@
 require File.expand_path('spec_helper', File.dirname(__FILE__))
 require 'tempfile'
 
-describe Sunspot::Server do
+describe Sunspot::Solr::Server do
   SUNSPOT_START_JAR = File.expand_path(
     File.join(File.dirname(__FILE__), '..', '..', 'solr', 'start.jar')
   )
 
   before :each do
-    @server = Sunspot::Server.new
+    @server = Sunspot::Solr::Server.new
   end
 
   it 'runs server in current process' do
